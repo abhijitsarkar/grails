@@ -1,4 +1,4 @@
-groovy
+grails
 ======
 
-My Groovy/Grails projects
+My Grails projects
