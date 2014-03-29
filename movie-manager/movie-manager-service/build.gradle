@@ -1,0 +1,18 @@
+dependencies {
+    compile project(':movie-manager-domain')
+
+    compile(
+        [group: 'org.apache.lucene', name: 'lucene-core', version: luceneVersion],
+        [group: 'org.apache.lucene', name: 'lucene-analyzers-common', version: luceneVersion],
+        [group: 'org.apache.lucene', name: 'lucene-queryparser', version: luceneVersion],
+        [group: 'javax.inject', name: 'javax.inject', version: injectApiVersion],
+        [group: 'javax.validation', name: 'validation-api', version: beanValidationApiVersion]
+    )
+
+    test(
+        [group: 'org.apache.lucene', name: 'lucene-test-framework', version: luceneVersion]
+    )
+    test project(path: ':movie-manager-domain', configuration: 'testJ')
+}
+
+//test.dependsOn ':movie-manager-domain:assemble'

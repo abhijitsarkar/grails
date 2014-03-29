@@ -1,0 +1,56 @@
+buildscript {
+    repositories { mavenCentral() }
+    dependencies {
+        classpath(
+                // https://github.com/grails/grails-gradle-plugin
+                [group: 'org.grails', name: 'grails-gradle-plugin', version: project.grailsGradlePluginVersion]
+        )
+    }
+}
+
+subprojects {
+    group = projectGroup
+    version = projectVersion
+
+    apply plugin: 'grails'
+    apply plugin: 'base'
+    apply plugin: 'maven'
+
+    configurations {
+        all {
+            exclude module: 'log4j'
+            exclude module: 'grails-plugin-log4j'
+        }
+    }
+
+    repositories {
+        mavenCentral()
+        grails.central()
+    }
+
+    grails {
+        grailsVersion = project.grailsVersion
+        groovyVersion = project.groovyVersion
+    }
+
+    dependencies {
+        compile(
+                [group: 'javax.servlet', name: 'javax.servlet-api', version: project.servletAPIVersion],
+                [group: 'org.slf4j', name: 'slf4j-api', version: project.slf4jVersion]
+
+        )
+        runtime(
+                [group: 'ch.qos.logback', name: 'logback-core', version: project.logbackVersion],
+                [group: 'ch.qos.logback', name: 'logback-classic', version: project.logbackVersion]
+        )
+        test(
+                [group: 'org.gmock', name: 'gmock', version: project.gmockVersion],
+                [group: 'org.hamcrest', name: 'hamcrest-all', version: project.hamcrestVersion],
+                [group: 'junit', name: 'junit', version: project.junitVersion]
+        )
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = project.gradleVersion
+}

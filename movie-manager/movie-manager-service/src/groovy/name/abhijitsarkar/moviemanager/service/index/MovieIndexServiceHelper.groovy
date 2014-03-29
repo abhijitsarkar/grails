@@ -1,0 +1,70 @@
+/*
+ * Copyright (c) 2014, the original author or authors.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * A copy of the GNU General Public License accompanies this software,
+ * and is also available at http://www.gnu.org/licenses.
+ */
+
+package name.abhijitsarkar.moviemanager.service.index
+
+import org.apache.lucene.analysis.Analyzer
+import org.apache.lucene.analysis.core.SimpleAnalyzer
+import org.apache.lucene.index.IndexWriter
+import org.apache.lucene.index.IndexWriterConfig
+import org.apache.lucene.store.Directory
+import org.apache.lucene.util.Version
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
+
+import javax.annotation.PostConstruct
+import javax.annotation.PreDestroy
+
+import static org.springframework.util.Assert.notNull
+
+/**
+ * @author Abhijit Sarkar
+ */
+@Component
+class MovieIndexServiceHelper {
+    @Autowired
+    private Directory indexDirectory
+
+    @Autowired
+    private Version version
+
+    private IndexWriter indexWriter
+
+    @PostConstruct
+    void postConstruct() {
+        notNull(indexDirectory, 'Index directory must not be null.')
+        notNull(version, 'Lucene version must not be null.')
+
+        indexWriter = newIndexWriter()
+    }
+
+    protected IndexWriter newIndexWriter() {
+        IndexWriterConfig iwc = new IndexWriterConfig(version, analyzer)
+        iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE)
+
+        indexWriter = new IndexWriter(indexDirectory, iwc)
+    }
+
+    protected Analyzer getAnalyzer() {
+//        new NameAnalyzer(version)
+        new SimpleAnalyzer(version)
+    }
+
+    @PreDestroy
+    void preDestroy() {
+        indexWriter?.close()
+    }
+}

@@ -1,0 +1,21 @@
+configurations {
+    testJ.extendsFrom testRuntime
+}
+
+task testJar(type: Jar, dependsOn: test) {
+    baseName = "${project.archivesBaseName}-tests"
+
+    // Jar uses a CopySpec to copy files. COnfigure it to exclude the unit dorecto
+    // Here's some kick-ass CopySpec code
+    // http://forums.gradle.org/gradle/topics/copyspec_support_for_moving_files_directories
+    from sourceSets.test.output
+    include '**/*.class'
+    filesMatching('**/*.class', { fileCopyDetails ->
+        fileCopyDetails.path = fileCopyDetails.path.minus('unit/')
+    })
+    includeEmptyDirs = false
+}
+
+artifacts {
+    testJ testJar
+}
