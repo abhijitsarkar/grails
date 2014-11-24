@@ -19,7 +19,7 @@ class MovieSpec extends Specification {
     def cleanup() {
     }
 
-    void 'Test that properties are set as expected when a new movie is created'() {
+    void 'test that properties are set as expected when a new movie is created'() {
     	expect:
         m instanceof Movie    	
         m.title == 'Terminator 2 Judgment Day'
@@ -29,17 +29,17 @@ class MovieSpec extends Specification {
 		m.imdbRating == 8.5f
     }
 
-    void 'Test toString'() {
+    void 'test toString'() {
     	expect:
         m.toString() == 'Terminator 2 Judgment Day[year:1991, genres:[Action, Sci-Fi, Thriller]]'
     }
 
-    void 'Test compareTo'() {
+    void 'test compareTo'() {
     	expect:
         !o.compareTo(m)
     }
 
-    void 'Test that with everything else equal, compareTo result is directly proportional to release year'() {
+    void 'test that with everything else equal, compareTo result is directly proportional to release year'() {
         when:
         o.releaseYear = 1992
 
@@ -47,7 +47,7 @@ class MovieSpec extends Specification {
         o > m
     }
 
-    void 'Test that with everything else equal, compareTo result is directly proportional to number of genres'() {
+    void 'test that with everything else equal, compareTo result is directly proportional to number of genres'() {
         when:
         o.genres.remove('Thriller')
 
@@ -55,7 +55,7 @@ class MovieSpec extends Specification {
         o < m
     }
 
-    void 'Test that compareTo throws an exception when passed an object that is not a movie'() {
+    void 'test that compareTo throws an exception when passed an object that is not a movie'() {
         when:
         m.compareTo 'I am not a movie'
 
@@ -63,12 +63,12 @@ class MovieSpec extends Specification {
         thrown(IllegalArgumentException)
     }
 
-    void 'Test equals'() {
+    void 'test equals'() {
         expect:
         o == m
     }
 
-    void 'Test that two movies are not equal when release years are different'() {
+    void 'test that two movies are not equal when release years are different'() {
         when:
         o.releaseYear  = 1992
 
@@ -76,7 +76,7 @@ class MovieSpec extends Specification {
         o != m
     }
 
-    void 'Test that two movies are not equal when genres are different'() {
+    void 'test that two movies are not equal when genres are different'() {
         when:
         o.genres.remove('Thriller')
 
@@ -84,17 +84,17 @@ class MovieSpec extends Specification {
         o != m
     }
 
-    void 'Test that equals returns false when passed an object that is not a movie'() {
+    void 'test that equals returns false when passed an object that is not a movie'() {
         expect:
         m != 'I am not a movie'
     }
 
-    void 'Test hashCode'() {
+    void 'test hashCode'() {
     	expect:
         m.hashCode() == o.hashCode()
     }
 
-    void 'Test that two movies have different hash codes when release years are different'() {
+    void 'test that two movies have different hash codes when release years are different'() {
         when:
         o.releaseYear  = 1992
 
@@ -102,7 +102,7 @@ class MovieSpec extends Specification {
         m.hashCode() != o.hashCode()
     }
 
-    void 'Test that two movies have different hash codes when genres are different'() {
+    void 'test that two movies have different hash codes when genres are different'() {
         when:
         o.genres.remove('Thriller')
 

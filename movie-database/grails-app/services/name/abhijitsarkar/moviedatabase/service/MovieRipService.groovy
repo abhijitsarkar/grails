@@ -1,7 +1,14 @@
 package name.abhijitsarkar.moviedatabase.service
 
+import static java.nio.file.Paths.get
+import static java.nio.file.Files.walk
+import static java.nio.file.Files.isDirectory
+import static java.nio.file.Files.size
+
 import static name.abhijitsarkar.moviedatabase.service.MovieRipParser.fileExtension
 import static name.abhijitsarkar.moviedatabase.service.MovieRipParser.parse
+
+import java.nio.file.Path
 
 import grails.transaction.Transactional
 
@@ -15,54 +22,50 @@ class MovieRipService {
     Collection<String> includes
 
     Collection<MovieRip> getMovieRips(String movieDirectory) {
-        log.debug('Indexing movies from {}.', movieDirectory)
+        log.debug("Indexing movies from ${movieDirectory}")
 
-        File rootDir = new File(movieDirectory)
+        final Path rootDir = get(movieDirectory)
 
         if (!rootDir.isAbsolute()) {
-            log.warn('Path {} is not absolute and is resolved to {}.', movieDirectory, rootDir.absolutePath)
+            log.warn("Path ${movieDirectory} is not absolute and is resolved to ${rootDir.toAbsolutePath().toString()}.")
         }
 
         String currentGenre
-        Collection<MovieRip> movieRips = [] as SortedSet
+        final Collection<MovieRip> movieRips = [] as SortedSet
 
-        DirectoryStream<Path> stream = Files.newDirectoryStream(rootDir)
+        for (Path p : walk(rootDir)) {
+            final String name = p.fileName.toString()
 
-        for (Path p : stream) {
-            File f = p.toFile()
+            log.trace("Found file, path ${p.toAbsolutePath().toString()}, name ${name}.")
 
-            log.trace('Found file, path {}, name {}.', f.absolutePath, f.name)
+            if (isDirectory(p) && isGenre(name)) {
+                log.debug("Setting current genre to ${name}.")
 
-            if (f.isDirectory() && isGenre(f.name)) {
-                log.debug('Setting current genre to {}.', f.name)
-
-                currentGenre = f.name
-            } else if (isMovieRip(f.name)) {
-                MovieRip movieRip = parseMovieRip(f.name)
+                currentGenre = name
+            } else if (isMovieRip(name)) {
+                final MovieRip movieRip = parse(name)
 
                 movieRip.genres = (movieRip.genres ?: [] as Set)
 
                 movieRip.genres << currentGenre
 
-                movieRip.fileSize = f.size()
+                movieRip.fileSize = size()
 
-                String parent = getParent(f, currentGenre, rootDir)
+                final String parent = getParent(p, currentGenre, rootDir)
 
                 if (!currentGenre?.equalsIgnoreCase(parent)) {
                     movieRip.parent = parent
                 }
 
-                log.info('Found movie {}.', movieRip)
+                log.info("Found movie ${movieRip}.")
 
-                boolean isUnique = movieRips.add(movieRip)
+                final boolean isUnique = movieRips.add(movieRip)
 
                 if (!isUnique) {
-                    log.info('Found duplicate movie {}.', movieRip)
+                    log.info("Found duplicate movie ${movieRip}.")
                 }
             }
         }
-
-        stream.close()
 
         movieRips
     }
@@ -75,19 +78,19 @@ class MovieRipService {
         fileName in genres
     }
 
-    final String getParent(File file, String currentGenre, File rootDirectory, String immediateParent = null) {
-        File parentFile = file.parentFile
+    final String getParent(final Path path, final String currentGenre, final Path rootDirectory, final String immediateParent = null) {
+        final Path parent = path.parent
 
-        if (!parentFile?.isDirectory() || parentFile?.compareTo(rootDirectory) <= 0) {
+        if (!isDirectory(parent) || parent?.compareTo(rootDirectory) <= 0) {
             return immediateParent
         }
 
-        if (parentFile.name.equalsIgnoreCase(currentGenre)) {
-            if (file.isDirectory()) {
-                return file.name
+        if (parent.fileName.toString().equalsIgnoreCase(currentGenre)) {
+            if (isDirectory(path)) {
+                return path.fileName.toString()
             }
         }
 
-        getParent(parentFile, currentGenre, rootDirectory, parentFile.name)
+        getParent(parent, currentGenre, rootDirectory, parent.fileName.toString())
     }
 }

@@ -18,7 +18,7 @@ class CastAndCrewSpec extends Specification {
     def cleanup() {
     }
 
-    void 'Test toString'() {
+    void 'test toString'() {
     	assert 'CastAndCrew[name:Arnold Schwarzenegger]' == star1?.toString()
     }
 }

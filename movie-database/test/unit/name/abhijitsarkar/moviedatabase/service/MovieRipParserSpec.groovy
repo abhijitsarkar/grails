@@ -9,7 +9,7 @@ import name.abhijitsarkar.moviedatabase.domain.MovieRip
 
 class MovieRipParserSpec extends Specification {
 
-    void 'Test that the parser is able to parse various conventional movie names'() {
+    void 'test that the parser is able to parse various conventional movie names'() {
         when:
         MovieRip mr = parse 'Casino Royal (2006).mkv'
         
@@ -35,7 +35,7 @@ class MovieRipParserSpec extends Specification {
         mr.fileExtension == '.avi'
     }
 
-    void 'Test that the parser is able to parse an unconventional movie rip name'() {
+    void 'test that the parser is able to parse an unconventional movie rip name'() {
         when:
         MovieRip mr = parse 'He-Man - A Friend In Need.avi'
         

@@ -1,11 +1,19 @@
 package name.abhijitsarkar.moviedatabase.service
 
+import java.nio.file.Path
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.stream.Stream
+
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 import spock.lang.Shared
+import org.spockframework.mock.CallRealMethodResponse
 
 import org.springframework.transaction.TransactionStatus
 import org.springframework.transaction.PlatformTransactionManager
+
+import name.abhijitsarkar.moviedatabase.domain.MovieRip
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
@@ -48,85 +56,127 @@ class MovieRipServiceSpec extends Specification {
     def cleanup() {
     }
 
-    void 'Test that a genre is correctly identified'() {
+    void 'test that a genre is correctly identified'() {
     	expect:
         service.genres.each { service.isGenre it }.inject { acc, val -> acc && val }
     }
 
-    void 'Test that not a genre is correctly identified'() {
+    void 'test that not a genre is correctly identified'() {
         expect:
         !service.isGenre('Action')
     }
 
-    void 'Test that a movie rip is correctly identified'() {
+    void 'test that a movie rip is correctly identified'() {
         expect:
         service.includes.each { service.isMovieRip it }.inject { acc, val -> acc && val }
     }
 
-    void 'Test that not a movie rip is correctly identified'() {
+    void 'test that not a movie rip is correctly identified'() {
         expect:
         !service.isMovieRip('.wmv')
     }
 
-    void 'Test getParent returns parent when parent is not a directory'() {
+    void 'test getParent returns parent when parent is not a directory'() {
         when:
-        def f = Mock(File)
-        def parentFile = Mock(File)
+        def p = Mock(Path)
+        def parent = Mock(Path)
 
-        1 * f.parentFile >> parentFile
-        1 * parentFile.isDirectory() >> false
+        p.parent >> parent
+
+        GroovySpy(Files, global: true)
+
+        Files.isDirectory(parent) >> false
 
         def rootDirectory = null
 
         then:
-            'immediateParent' == service.getParent(f, 'currentGenre', rootDirectory, 'immediateParent')
+            'immediateParent' == service.getParent(p, 'currentGenre', rootDirectory, 'immediateParent')
     }
 
-    void 'Test getParent returns parent when parent is a subdirectory of root directory'() {
+     void 'test getParent returns parent when parent is a subdirectory of root directory'() {
         when:
-        def f = Mock(File)
-        def parentFile = Mock(File)
+        def p = Mock(Path)
+        def parent = Mock(Path)
 
-        1 * f.parentFile >> parentFile
-        1 * parentFile.isDirectory() >> true
+        p.parent >> parent
+
+        GroovySpy(Files, global: true)
+
+        Files.isDirectory(parent) >> true
 
         def rootDirectory = null
 
-        1 * parentFile.compareTo(rootDirectory) >> -1
+        parent.compareTo(rootDirectory) >> -1
 
         then:
-            'immediateParent' == service.getParent(f, 'currentGenre', rootDirectory, 'immediateParent')
+            'immediateParent' == service.getParent(p, 'currentGenre', rootDirectory, 'immediateParent')
     }
 
-    void 'Test getParent returns file name when parent is current genre'() {
+    void 'test getParent returns file name when parent is current genre'() {
         when:
-        def f = Mock(File)
-        def parentFile = Mock(File)
+        def p = Mock(Path)
+        def parent = Mock(Path)
 
-        1 * f.parentFile >> parentFile
-        1 * parentFile.isDirectory() >> true
+        p.parent >> parent
+
+        GroovySpy(Files, global: true)
+
+        Files.isDirectory(parent) >> true
 
         def rootDirectory = null
 
-        1 * parentFile.compareTo(rootDirectory) >> 1
-        1 * parentFile.name >> 'currentGenre'
+        parent.compareTo(rootDirectory) >> 1
+        parent.fileName >> Paths.get('currentGenre')
 
-        1 * f.isDirectory() >> true
-        1 * f.name >> 'Sci-Fi'
+        Files.isDirectory(p) >> true
+        p.fileName >> Paths.get('Sci-Fi')
 
         then:
-            'Sci-Fi' == service.getParent(f, 'currentGenre', null, 'immediateParent')
+            'Sci-Fi' == service.getParent(p, 'currentGenre', null, 'immediateParent')
     }
 
-    void 'Test that a list of movie rips are returned from a root directory'() {
+    void 'test that movie rips are parsed as expected'() {
         when:
-        def (rootDirectory , drama, horror, thriller) = (1..4).each { Mock(File) }
+        def (rootDirectory, drama, horror, thriller, aBeautifulMind, theExorcist, memento) = (1..7).collect { Mock(Path) }
+        def movieDirectory = 'movieDirectory'
 
-        rootDirectory.eachFileRecurse >> [drama, horror, thriller] as List
+        rootDirectory.isAbsolute() >> true
+
+        drama.fileName >> Paths.get('Drama')
+        aBeautifulMind.fileName >> Paths.get('A Beautiful Mind (2001).mkv')
+        horror.fileName >> Paths.get('Horror')
+        theExorcist.fileName >> Paths.get('The Exorcist (1973).mkv')
+        thriller.fileName >> Paths.get('Thriller')
+        memento.fileName >> Paths.get('Memento (2000).avi')
+
+        GroovySpy(Files, global: true)
+        Files.walk(rootDirectory) >> Stream.of(rootDirectory, drama, aBeautifulMind, horror, theExorcist, thriller, memento)
+
+        GroovySpy(Paths, global: true)
+        Paths.get(movieDirectory) >> rootDirectory
+
+        [drama, horror, thriller].each {
+            Paths.isDirectory(it) >> true
+            it.parent >> rootDirectory
+            it.compareTo(rootDirectory) >> -1
+        }
+
+        [aBeautifulMind, theExorcist, memento].each {
+            Paths.size(it) >> 1000l
+        }
+
+        aBeautifulMind.parent >> drama
+        theExorcist.parent >> horror
+        memento.parent >> thriller
+
+        def aBeautifulMindMovieRip = new MovieRip(title: 'A Beautiful Mind', genres: ['Drama'], 
+                releaseYear: 2001, fileSize: 1000l, fileExtension: '.mkv', parent: 'Drama')
+        def theExorcistMovieRip = new MovieRip(title: 'The Exorcist', genres: ['Horror'], 
+                releaseYear: 1973, fileSize: 1000l, fileExtension: '.mkv', parent: 'Horror')
+        def mementoMovieRip = new MovieRip(title: 'Memento', genres: ['Thriller'], 
+                releaseYear: 2000, fileSize: 1000l, fileExtension: '.avi', parent: 'Thriller')
 
         then:
-        [rootDirectory , drama, horror, thriller].each { it instanceof File }
-
-        //rootDirectory.eachFileRecurse >> [drama, horror, thriller] as List
-    }
+        service.getMovieRips(movieDirectory) == [aBeautifulMindMovieRip, theExorcistMovieRip, mementoMovieRip]
+    }    
 }
