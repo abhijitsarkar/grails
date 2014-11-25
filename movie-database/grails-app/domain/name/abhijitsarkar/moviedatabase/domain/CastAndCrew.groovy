@@ -5,8 +5,6 @@ import groovy.transform.EqualsAndHashCode
 @EqualsAndHashCode
 class CastAndCrew {
 
-	static belongsTo = Movie
-
     static constraints = {
     }
 

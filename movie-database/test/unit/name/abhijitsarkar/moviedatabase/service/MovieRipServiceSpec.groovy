@@ -6,19 +6,23 @@ import java.nio.file.Paths
 import java.util.stream.Stream
 
 import grails.test.mixin.TestFor
+import grails.test.mixin.TestMixin
+import grails.test.mixin.domain.DomainClassUnitTestMixin
 import spock.lang.Specification
 import spock.lang.Shared
-import org.spockframework.mock.CallRealMethodResponse
 
 import org.springframework.transaction.TransactionStatus
 import org.springframework.transaction.PlatformTransactionManager
 
+import name.abhijitsarkar.moviedatabase.domain.Movie
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
+import name.abhijitsarkar.moviedatabase.service.MovieRipParser
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
 @TestFor(MovieRipService)
+@TestMixin(DomainClassUnitTestMixin)
 class MovieRipServiceSpec extends Specification {
 
     @Shared MovieRipService service
@@ -169,14 +173,29 @@ class MovieRipServiceSpec extends Specification {
         theExorcist.parent >> horror
         memento.parent >> thriller
 
-        def aBeautifulMindMovieRip = new MovieRip(title: 'A Beautiful Mind', genres: ['Drama'], 
-                releaseYear: 2001, fileSize: 1000l, fileExtension: '.mkv', parent: 'Drama')
-        def theExorcistMovieRip = new MovieRip(title: 'The Exorcist', genres: ['Horror'], 
-                releaseYear: 1973, fileSize: 1000l, fileExtension: '.mkv', parent: 'Horror')
-        def mementoMovieRip = new MovieRip(title: 'Memento', genres: ['Thriller'], 
-                releaseYear: 2000, fileSize: 1000l, fileExtension: '.avi', parent: 'Thriller')
+        def aBeautifulMindMovie = mockDomain(Movie, [
+            [title: 'A Beautiful Mind', releaseYear: 2001, genres: ['Drama']]
+        ])
+        def theExorcistMovie = mockDomain(Movie, [
+            [title: 'The Exorcist', releaseYear: 1973, genres: ['Horror']]
+        ])
+        def mementoMovie = mockDomain(Movie, [
+            [title: 'Memento', releaseYear: 2000, genres: ['Thriller']]
+        ])
+
+        GroovySpy(MovieRipParser, global: true)
+
+        MovieRipParser.parse('A Beautiful Mind (2001).mkv') >> mockDomain(MovieRip, [
+            [movie: aBeautifulMindMovie, fileExtension: '.mkv', fileSize: 1000l]
+        ])
+        MovieRipParser.parse('The Exorcist (1973).mkv') >> mockDomain(MovieRip, [
+            [movie: theExorcistMovie, fileExtension: '.mkv', fileSize: 1000l]
+        ])
+        MovieRipParser.parse('Memento (2000).avi') >> mockDomain(MovieRip, [
+            [movie: mementoMovie, fileExtension: '.avi', fileSize: 1000l]
+        ])
 
         then:
-        service.getMovieRips(movieDirectory) == [aBeautifulMindMovieRip, theExorcistMovieRip, mementoMovieRip]
+        service.getMovieRips(movieDirectory)
     }    
 }

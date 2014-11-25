@@ -5,6 +5,8 @@ class Movie implements Comparable {
 	static hasMany = [genres: String, stars: CastAndCrew]
 
 	static constraints = {
+        stars nullable: true
+        director nullable: true
 		imdbRating nullable: true
 		imdbURL nullable: true, url: true
     }
@@ -12,7 +14,7 @@ class Movie implements Comparable {
     String title
     int releaseYear
     CastAndCrew director
-    float imdbRating
+    Float imdbRating
     // GRAILS-9256 - Cannot generate scaffolded views for java.net.URL attributes in a domain class 
     String imdbURL
 
