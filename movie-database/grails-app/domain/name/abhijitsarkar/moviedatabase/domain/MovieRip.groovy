@@ -3,7 +3,9 @@ package name.abhijitsarkar.moviedatabase.domain
 class MovieRip implements Comparable {
 
 	static constraints = {
-		parent nullable: true
+        importFrom Movie
+
+        parent nullable: true
     }
 
     long fileSize

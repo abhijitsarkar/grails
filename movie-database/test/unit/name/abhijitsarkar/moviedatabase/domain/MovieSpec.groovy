@@ -1,6 +1,9 @@
 package name.abhijitsarkar.moviedatabase.domain
 
+import static name.abhijitsarkar.moviedatabase.domain.MovieSpecHelper.terminator2MovieLite
 import static name.abhijitsarkar.moviedatabase.domain.MovieSpecHelper.terminator2Movie
+
+import name.abhijitsarkar.moviedatabase.domain.test.MovieMock
 
 import grails.test.mixin.TestFor
 import spock.lang.Specification
@@ -12,8 +15,8 @@ class MovieSpec extends Specification {
     private Movie o
 
     def setup() {
-    	m = new MovieMock()
-        o = terminator2Movie()
+    	m = terminator2Movie()
+        o = terminator2MovieLite()
     }
 
     def cleanup() {

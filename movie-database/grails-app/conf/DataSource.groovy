@@ -22,12 +22,6 @@ environments {
 //            url = "jdbc:mysql://localhost:3306/mdb"
 //        }
 //    }
-//    test {
-//        dataSource {
-//            dbCreate = "update"
-//            url = "jdbc:mysql://localhost:3306/mdb"
-//        }
-//    }
   development {
         dataSource {
             dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
@@ -37,7 +31,7 @@ environments {
     test {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
+            url = "jdbc:mysql://localhost:3306/mdb"
         }
     }
 

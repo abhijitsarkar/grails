@@ -5,7 +5,6 @@ class Movie implements Comparable {
 	static hasMany = [genres: String, stars: CastAndCrew]
 
 	static constraints = {
-        stars nullable: true
         director nullable: true
 		imdbRating nullable: true
 		imdbURL nullable: true, url: true
