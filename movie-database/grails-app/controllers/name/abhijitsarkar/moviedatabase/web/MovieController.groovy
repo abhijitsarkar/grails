@@ -1,8 +1,8 @@
 package name.abhijitsarkar.moviedatabase.web
 
-import name.abhijitsarkar.moviedatabase.domain.Movie
+import name.abhijitsarkar.moviedatabase.domain.MovieRip
 
 class MovieController {
 
-	static def scaffold = Movie
+	static def scaffold = MovieRip
 }

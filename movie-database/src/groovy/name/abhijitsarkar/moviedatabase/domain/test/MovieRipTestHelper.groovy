@@ -1,28 +1,28 @@
 package name.abhijitsarkar.moviedatabase.domain.test
 
-import name.abhijitsarkar.moviedatabase.domain.Movie
+import name.abhijitsarkar.moviedatabase.domain.MovieRip
 import name.abhijitsarkar.moviedatabase.domain.CastAndCrew
 
-class MovieTestHelper {
+class MovieRipTestHelper {
 
-	static Movie terminator2MovieLite() {
-		new Movie().with {
+	static MovieRip terminator2MovieRipLite() {
+		new MovieRip().with {
         	title = 'Terminator 2 Judgment Day'
             
-            genres = [
-                    'Sci-Fi',
-                    'Action',
-                    'Thriller'
-            ] as Set
+            genres = ['Sci-Fi', 'Action', 'Thriller'] as List
 
             releaseYear = 1991
+
+            fileSize = 1L
+            fileExtension = '.mkv'
+            parent = 'Sci-Fi'
 
             delegate
         }
     }
 
-    static Movie terminator2Movie() {
-        terminator2MovieLite().with {
+    static MovieRip terminator2MovieRip() {
+        terminator2MovieRipLite().with {
             director = new CastAndCrew('James Cameron')
 
             Collection<CastAndCrew> stars = [] as Set

@@ -1,6 +1,5 @@
 package name.abhijitsarkar.moviedatabase.service
 
-import name.abhijitsarkar.moviedatabase.domain.Movie
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
 
 import java.util.regex.Matcher
@@ -40,9 +39,7 @@ class MovieRipParser {
             movieTitle = fileName.minus(fileExtension)
         }
 
-        final Movie m = new Movie(title: movieTitle, releaseYear: releaseYear)
-
-        new MovieRip(movie: m, fileExtension: fileExtension)
+        new MovieRip(title: movieTitle, releaseYear: releaseYear, fileExtension: fileExtension)
     }
 
     static String fileExtension(final String fileName) {

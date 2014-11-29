@@ -1,32 +1,30 @@
 package name.abhijitsarkar.moviedatabase.domain
 
-import static name.abhijitsarkar.moviedatabase.domain.MovieSpecHelper.terminator2MovieLite
-import static name.abhijitsarkar.moviedatabase.domain.MovieSpecHelper.terminator2Movie
-
-import name.abhijitsarkar.moviedatabase.domain.test.MovieMock
+import static name.abhijitsarkar.moviedatabase.domain.test.MovieRipTestHelper.terminator2MovieRipLite
+import static name.abhijitsarkar.moviedatabase.domain.test.MovieRipTestHelper.terminator2MovieRip
 
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
-@TestFor(Movie)
-class MovieSpec extends Specification {
+@TestFor(MovieRip)
+class MovieRipSpec extends Specification {
 
-	private Movie m
-    private Movie o
+	private MovieRip m
+    private MovieRip o
 
     def setup() {
-    	m = terminator2Movie()
-        o = terminator2MovieLite()
+    	m = terminator2MovieRip()
+        o = terminator2MovieRipLite()
     }
 
     def cleanup() {
     }
 
-    void 'test that properties are set as expected when a new movie is created'() {
+    void 'test that properties are set as expected when a new movie rip is created'() {
     	expect:
-        m instanceof Movie    	
+        m instanceof MovieRip    	
         m.title == 'Terminator 2 Judgment Day'
-    	m.genres.find { it.toString() == 'Sci-Fi' }
+    	m.genres.find { it == 'Sci-Fi' }
 		m.stars.find { it.name == 'Arnold Schwarzenegger' }
 		m.releaseYear == 1991
 		m.imdbRating == 8.5f
@@ -34,7 +32,7 @@ class MovieSpec extends Specification {
 
     void 'test toString'() {
     	expect:
-        m.toString() == 'Terminator 2 Judgment Day[year:1991, genres:[Action, Sci-Fi, Thriller]]'
+        m.toString() == 'Terminator 2 Judgment Day[year:1991, genres:[Sci-Fi, Action, Thriller]]'
     }
 
     void 'test compareTo'() {
@@ -58,7 +56,7 @@ class MovieSpec extends Specification {
         o < m
     }
 
-    void 'test that compareTo throws an exception when passed an object that is not a movie'() {
+    void 'test that compareTo throws an exception when passed an object that is not a movie rip'() {
         when:
         m.compareTo 'I am not a movie'
 
@@ -71,7 +69,7 @@ class MovieSpec extends Specification {
         o == m
     }
 
-    void 'test that two movies are not equal when release years are different'() {
+    void 'test that two movie rips are not equal when release years are different'() {
         when:
         o.releaseYear  = 1992
 
@@ -79,7 +77,7 @@ class MovieSpec extends Specification {
         o != m
     }
 
-    void 'test that two movies are not equal when genres are different'() {
+    void 'test that two movie rips are not equal when genres are different'() {
         when:
         o.genres.remove('Thriller')
 
@@ -87,7 +85,7 @@ class MovieSpec extends Specification {
         o != m
     }
 
-    void 'test that equals returns false when passed an object that is not a movie'() {
+    void 'test that equals returns false when passed an object that is not a movie rip'() {
         expect:
         m != 'I am not a movie'
     }
@@ -97,7 +95,7 @@ class MovieSpec extends Specification {
         m.hashCode() == o.hashCode()
     }
 
-    void 'test that two movies have different hash codes when release years are different'() {
+    void 'test that two movie rips have different hash codes when release years are different'() {
         when:
         o.releaseYear  = 1992
 
@@ -105,7 +103,7 @@ class MovieSpec extends Specification {
         m.hashCode() != o.hashCode()
     }
 
-    void 'test that two movies have different hash codes when genres are different'() {
+    void 'test that two movie rips have different hash codes when genres are different'() {
         when:
         o.genres.remove('Thriller')
 

@@ -1,9 +1,12 @@
 dataSource {
     pooled = true
     jmxExport = true
-    driverClassName = "com.mysql.jdbc.Driver"
-    username = "mdbadmin"
-    password = "mdbadmin"
+    //driverClassName = "com.mysql.jdbc.Driver"
+    //username = "mdbadmin"
+    //password = "mdbadmin"
+    driverClassName = "org.h2.Driver"
+    username = "sa"
+    password = ""
 }
 hibernate {
     cache.use_second_level_cache = true
@@ -30,8 +33,10 @@ environments {
     }
     test {
         dataSource {
-            dbCreate = "update"
-            url = "jdbc:mysql://localhost:3306/mdb"
+            //dbCreate = "update"
+            //url = "jdbc:mysql://localhost:3306/mdb"
+            dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
+            url = "jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
         }
     }
 

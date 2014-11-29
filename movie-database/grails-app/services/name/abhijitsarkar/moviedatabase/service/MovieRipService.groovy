@@ -49,7 +49,7 @@ class MovieRipService {
 
                 movieRip.genres << currentGenre
 
-                movieRip.fileSize = size()
+                movieRip.fileSize = size(p)
 
                 final String parent = getParent(p, currentGenre, rootDir)
 

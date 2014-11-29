@@ -64,5 +64,5 @@ grails.project.dependency.resolution = {
 }
 
 grails.war.resources = { stagingDir, args ->
-    delete(file:"${stagingDir}/WEB-INF/classes/name/abhijitsarkar/moviedatabase/domain/test")
+    delete(file:"${stagingDir}/WEB-INF/classes/name/abhijitsarkar/moviedatabase/*/test")
 }
