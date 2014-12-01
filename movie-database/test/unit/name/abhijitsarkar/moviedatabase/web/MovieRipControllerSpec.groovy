@@ -3,8 +3,8 @@ package name.abhijitsarkar.moviedatabase.web
 import grails.test.mixin.TestFor
 import spock.lang.Specification
 
-@TestFor(MovieController)
-class MovieControllerSpec extends Specification {
+@TestFor(MovieRipController)
+class MovieRipControllerSpec extends Specification {
 
     def setup() {
     }
