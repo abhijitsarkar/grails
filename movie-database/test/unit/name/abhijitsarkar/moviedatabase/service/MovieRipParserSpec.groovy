@@ -3,7 +3,6 @@ package name.abhijitsarkar.moviedatabase.service
 import static name.abhijitsarkar.moviedatabase.service.MovieRipParser.parse
 
 import spock.lang.Specification
-import spock.lang.Ignore
 
 import name.abhijitsarkar.moviedatabase.domain.MovieRip 
 

@@ -9,13 +9,13 @@ class MovieRipTestHelper {
 		new MovieRip().with {
         	title = 'Terminator 2 Judgment Day'
             
-            genres = ['Sci-Fi', 'Action', 'Thriller'] as List
+            genres = ['Sci-Fi', 'Action', 'Thriller'] as Set
 
             releaseYear = 1991
 
             fileSize = 1L
             fileExtension = '.mkv'
-            parent = 'Sci-Fi'
+            //parent = 'Sci-Fi'
 
             delegate
         }

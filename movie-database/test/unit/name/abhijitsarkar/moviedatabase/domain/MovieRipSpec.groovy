@@ -3,10 +3,8 @@ package name.abhijitsarkar.moviedatabase.domain
 import static name.abhijitsarkar.moviedatabase.domain.test.MovieRipTestHelper.terminator2MovieRipLite
 import static name.abhijitsarkar.moviedatabase.domain.test.MovieRipTestHelper.terminator2MovieRip
 
-import grails.test.mixin.TestFor
 import spock.lang.Specification
 
-@TestFor(MovieRip)
 class MovieRipSpec extends Specification {
 
 	private MovieRip m
@@ -28,11 +26,6 @@ class MovieRipSpec extends Specification {
 		m.stars.find { it.name == 'Arnold Schwarzenegger' }
 		m.releaseYear == 1991
 		m.imdbRating == 8.5f
-    }
-
-    void 'test toString'() {
-    	expect:
-        m.toString() == 'Terminator 2 Judgment Day[year:1991, genres:[Sci-Fi, Action, Thriller]]'
     }
 
     void 'test compareTo'() {

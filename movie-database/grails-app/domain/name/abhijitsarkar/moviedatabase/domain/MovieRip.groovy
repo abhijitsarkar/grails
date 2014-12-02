@@ -1,10 +1,14 @@
 package name.abhijitsarkar.moviedatabase.domain
 
+import groovy.transform.ToString
+
 import grails.gorm.DetachedCriteria
+import org.grails.datastore.mapping.query.api.Criteria
 
 import org.apache.commons.logging.LogFactory
 import org.apache.commons.logging.Log
 
+@ToString
 class MovieRip implements Comparable {
 
     private static final Log log = LogFactory.getLog(this)
@@ -16,6 +20,7 @@ class MovieRip implements Comparable {
 		imdbRating nullable: true
 		imdbURL nullable: true, url: true
         stars nullable: true
+        parent nullable: true
     }
 
     String title
@@ -27,11 +32,6 @@ class MovieRip implements Comparable {
     long fileSize
     String fileExtension
     String parent
-
-    @Override
-    String toString() {
-        "${title}[year:${releaseYear}, genres:${genres}]"
-    }
 
     @Override
     boolean equals(Object obj) {
@@ -87,8 +87,10 @@ class MovieRip implements Comparable {
     static Collection<MovieRip> findAllByField(final String fieldName, final String fieldValue, final int max) {
         log.debug("Search will be limited to field: ${fieldName} like value: ${fieldValue}.")
 
-        final DetachedCriteria<MovieRip> query = new DetachedCriteria<MovieRip>(MovieRip)
+        final Criteria<MovieRip> query = new DetachedCriteria<MovieRip>(MovieRip)
 
-        query.ilike(fieldName, "%${fieldValue}%").list()
+        query.ilike(fieldName, "%${fieldValue}%")
+
+        query.list()
     }
 }

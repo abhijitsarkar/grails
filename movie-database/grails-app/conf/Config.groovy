@@ -85,6 +85,9 @@ grails.hibernate.pass.readonly = false
 // configure passing read-only to OSIV session by default, requires "singleSession = false" OSIV mode
 grails.hibernate.osiv.readonly = false
 
+// Scream and moan and cry if save fails
+grails.gorm.failOnError = true
+
 environments {
     development {
         grails.logging.jul.usebridge = true
@@ -114,6 +117,6 @@ log4j.main = {
 
     debug  'name.abhijitsarkar.moviedatabase'
 
-    debug 'org.hibernate.SQL'
-    trace 'org.hibernate.type.descriptor.sql.BasicBinder'
+    //debug 'org.hibernate.SQL'
+    //trace 'org.hibernate.type.descriptor.sql.BasicBinder'
 }

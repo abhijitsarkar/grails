@@ -14,7 +14,6 @@ import groovy.transform.PackageScope
 import grails.transaction.Transactional
 
 import org.hibernate.SessionFactory
-import org.hibernate.Session
 
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
 
@@ -54,9 +53,9 @@ class MovieRipIndexService {
         getMovieRips(movieDirectory).eachWithIndex { MovieRip m, int index ->
             m.save()
 
-            //if (!(index % 100)) {
+            if (!(index % 100)) {
                 cleanUpSession()
-            //}
+            }
 
             ++count
         }

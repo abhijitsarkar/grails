@@ -55,6 +55,10 @@ grails.project.dependency.resolution = {
         runtime ":database-migration:1.4.0"
         runtime ":jquery:1.11.1"
 
+        test ":code-coverage:2.0.3-3"
+
+        provided ":codenarc:0.22"
+
         // Uncomment these to enable additional asset-pipeline capabilities
         //compile ":sass-asset-pipeline:1.9.0"
         //compile ":less-asset-pipeline:1.10.0"
@@ -66,3 +70,13 @@ grails.project.dependency.resolution = {
 grails.war.resources = { stagingDir, args ->
     delete(file:"${stagingDir}/WEB-INF/classes/name/abhijitsarkar/moviedatabase/*/test")
 }
+
+coverage {
+    exclusions = [
+        '**/test/**'
+    ]
+}
+
+codenarc.processTestUnit = false
+codenarc.processTestIntegration = false
+

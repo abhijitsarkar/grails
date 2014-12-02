@@ -21,37 +21,39 @@ hibernate {
 
 // environment specific settings
 environments {
-//    development {
-//        dataSource {
-//            dbCreate = "update"
-//            url = "jdbc:mysql://localhost:3306/mdb"
-//        }
-//    }
-
-  def tmpDir = System.getProperty('java.io.tmpdir')
-  def dbDir = new File(tmpDir, 'movie-database').toURI()
-
-  println "Creting db dir: ${dbDir}"
-
-  development {
+    development {
         dataSource {
-            dbCreate = "create" // one of 'create', 'create-drop', 'update', 'validate', ''
-            url = "jdbc:h2:file:${dbDir}:mdbDev"
+            //dbCreate = "update"
+            //url = "jdbc:mysql://localhost:3306/mdbDev"
+            dbCreate = "update" // one of 'create', 'create-drop', 'update', 'validate', ''
+            url = "jdbc:h2:mem:mdbDev"
         }
     }
+
+  //def tmpDir = System.getProperty('java.io.tmpdir')
+  //def dbDir = new File(tmpDir, 'movie-database').toURI()
+
+  //println "Creting db dir: ${dbDir}"
+
+  //development {
+   //     dataSource {
+   //         dbCreate = "create" // one of 'create', 'create-drop', 'update', 'validate', ''
+    //        url = "jdbc:h2:file:${dbDir}:mdbDev"
+    //    }
+    //}
     test {
         dataSource {
             //dbCreate = "update"
             //url = "jdbc:mysql://localhost:3306/mdb"
-            dbCreate = "create" // one of 'create', 'create-drop', 'update', 'validate', ''
-            url = "jdbc:h2:file:${dbDir}:mdbTest"
+            dbCreate = "update" // one of 'create', 'create-drop', 'update', 'validate', ''
+            url = "jdbc:h2:mem:mdbTest"
         }
     }
 
     production {
         dataSource {
             dbCreate = "update"
-            url = "jdbc:h2:file:${dbDir}:mdbProd"
+            url = "jdbc:h2:mem:mdbProd"
             properties {
                // See http://grails.org/doc/latest/guide/conf.html#dataSource for documentation
                defaultTransactionIsolation = java.sql.Connection.TRANSACTION_READ_COMMITTED

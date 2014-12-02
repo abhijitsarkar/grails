@@ -1,9 +1,7 @@
 package name.abhijitsarkar.moviedatabase.domain
 
-import grails.test.mixin.TestFor
 import spock.lang.Specification
 
-@TestFor(CastAndCrew)
 class CastAndCrewSpec extends Specification {
 
 	private CastAndCrew star1

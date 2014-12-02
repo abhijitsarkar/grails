@@ -5,29 +5,13 @@ import java.nio.file.Paths
 import java.nio.file.Files
 
 import grails.test.mixin.TestFor
-import grails.test.mixin.TestMixin
 import spock.lang.Specification
-import spock.lang.Shared
-
-import org.springframework.transaction.TransactionStatus
-import org.springframework.transaction.PlatformTransactionManager
 
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
 @TestFor(MovieRipIndexService)
 class MovieRipIndexServiceSpec extends Specification {
-
-    @Shared MovieRipIndexService service
-
-    def setupSpec() {
-        service = new MovieRipIndexService()
-
-        /* GRAILS-10538 - Test of service doesn't work with @Transactional annotation */
-        service.transactionManager = Mock(PlatformTransactionManager) { 
-            getTransaction(_) >> Mock(TransactionStatus) 
-        }
-    }
 
     void 'test that a genre is correctly identified'() {
     	expect:
