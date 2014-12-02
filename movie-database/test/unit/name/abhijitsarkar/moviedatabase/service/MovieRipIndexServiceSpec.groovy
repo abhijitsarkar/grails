@@ -1,8 +1,5 @@
 package name.abhijitsarkar.moviedatabase.service
 
-import static name.abhijitsarkar.moviedatabase.service.test.MovieRipServiceTestHelper.getGenres
-import static name.abhijitsarkar.moviedatabase.service.test.MovieRipServiceTestHelper.getIncludes
-
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.Files
@@ -19,12 +16,12 @@ import org.springframework.transaction.PlatformTransactionManager
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
 @TestFor(MovieRipIndexService)
-class MovieRipServiceSpec extends Specification {
+class MovieRipIndexServiceSpec extends Specification {
 
     @Shared MovieRipIndexService service
 
     def setupSpec() {
-        service = new MovieRipIndexService(genres: getGenres(), includes: getIncludes())
+        service = new MovieRipIndexService()
 
         /* GRAILS-10538 - Test of service doesn't work with @Transactional annotation */
         service.transactionManager = Mock(PlatformTransactionManager) { 

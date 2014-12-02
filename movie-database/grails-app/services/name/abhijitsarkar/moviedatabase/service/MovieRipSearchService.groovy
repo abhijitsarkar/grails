@@ -4,13 +4,13 @@ import grails.transaction.Transactional
 
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
 
-@Transactional
+@Transactional(readOnly = true)
 class MovieRipSearchService {
 
 	Collection<MovieRip> search(final String fieldName, final String fieldValue, final int max) {
 	    Collection<MovieRip> movieRips = null
 
-	    if (searchFieldName) {
+	    if (fieldName) {
 	    	movieRips = MovieRip.findAllByField(fieldName, fieldValue, max)
 	    } else {
 	    	movieRips = MovieRip.list()

@@ -1,12 +1,9 @@
 package name.abhijitsarkar.moviedatabase.web
 
-import grails.transaction.Transactional
-
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
 import name.abhijitsarkar.moviedatabase.service.MovieRipSearchService
 import name.abhijitsarkar.moviedatabase.service.MovieRipIndexService
 
-@Transactional
 class MovieRipController {
 
 	/* Dependency Injection gotcha: Grails uses autowiring by name; the type isn't really used. */
@@ -23,14 +20,13 @@ class MovieRipController {
 
 	    final Collection<MovieRip> movieRips = movieRipSearchService.search(searchFieldName, searchFieldValue, params.max)
 
-	    respond movieRips, model: [movieCount: movieRips.size()]
+	    respond(movieRips, formats:['json'])
 	}
 
-	def save(final String movieDirectory) {
-		log.debug("Params: ${params}.")
+	def save() {
+		final String movieDirectory = request.JSON.movieDirectory
+		final int count = movieRipIndexService.index(movieDirectory)
 
-	    movieRipIndexService.index(movieDirectory)
-
-	    respond movieDirectory
+	    respond([movieDirectory: movieDirectory, count: count] as Map, formats:['json'])
 	}
 }

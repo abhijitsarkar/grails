@@ -113,4 +113,7 @@ log4j.main = {
     error  'org.eclipse.jetty' // Jetty information and errors
 
     debug  'name.abhijitsarkar.moviedatabase'
+
+    debug 'org.hibernate.SQL'
+    trace 'org.hibernate.type.descriptor.sql.BasicBinder'
 }

@@ -5,14 +5,12 @@ import static java.nio.file.Files.walk
 import static java.nio.file.Files.isDirectory
 import static java.nio.file.Files.size
 
-import static org.springframework.util.Assert.isTrue
-
 import static name.abhijitsarkar.moviedatabase.service.MovieRipParser.fileExtension
 import static name.abhijitsarkar.moviedatabase.service.MovieRipParser.parse
 
 import java.nio.file.Path
-import javax.annotation.PostConstruct
 
+import groovy.transform.PackageScope
 import grails.transaction.Transactional
 
 import org.hibernate.SessionFactory
@@ -23,37 +21,53 @@ import name.abhijitsarkar.moviedatabase.domain.MovieRip
 @Transactional
 class MovieRipIndexService {
 
-    Collection<String> genres
+    Collection<String> genres = 
+        [
+            'Action and Adventure',
+            'Animation',
+            'Comedy',
+            'Documentary',
+            'Drama',
+            'Horror',
+            'R-Rated Mainstream Movies',
+            'Romance',
+            'Sci-Fi',
+            'Thriller'
+        ] as Set
 
-    Collection<String> includes
+    Collection<String> includes = 
+        [
+            '.avi',
+            '.mkv',
+            '.mp4',
+            '.divx',
+            '.mov'
+        ] as Set
 
     SessionFactory sessionFactory
 
-    private Session session
-
-    @PostConstruct
-    void postConstruct() {
-        isTrue(genres, "Genres must not be null or empty.")
-        isTrue(includes, "Includes must not be null or empty.")
-
-        session = sessionFactory.getCurrentSession()
-
-        isTrue(session, "Session must not be null.")
-    }
-
     int index(final String movieDirectory) {
-        getMovieRips().eachWithIndex { MovieRip m, int index ->
-            MovieRip.save(m)
-
-            if (!(index % 100)) {
-                cleanUpSession()
-            }
-        }
-    }
-
-    private Collection<MovieRip> getMovieRips(final String movieDirectory) {
         log.debug("Indexing movies from ${movieDirectory}")
 
+        int count = 0
+
+        getMovieRips(movieDirectory).eachWithIndex { MovieRip m, int index ->
+            m.save()
+
+            //if (!(index % 100)) {
+                cleanUpSession()
+            //}
+
+            ++count
+        }
+
+        log.debug("Indexed ${count} movie rips.")
+
+        count
+    }
+
+    @PackageScope
+    Collection<MovieRip> getMovieRips(final String movieDirectory) {
         final Path rootDir = get(movieDirectory)
 
         if (!rootDir.isAbsolute()) {
@@ -100,15 +114,18 @@ class MovieRipIndexService {
         movieRips
     }
 
+    @PackageScope
     boolean isMovieRip(final String fileName) {
         fileExtension(fileName).toLowerCase() in includes
     }
 
+    @PackageScope
     boolean isGenre(final String fileName) {
         fileName in genres
     }
 
-    final String getParent(final Path path, final String currentGenre, final Path rootDirectory, final String immediateParent = null) {
+    @PackageScope
+    String getParent(final Path path, final String currentGenre, final Path rootDirectory, final String immediateParent = null) {
         final Path parent = path.parent
 
         if (!isDirectory(parent) || parent?.compareTo(rootDirectory) <= 0) {
@@ -125,7 +142,9 @@ class MovieRipIndexService {
     }
 
     private void cleanUpSession() {
-        session.flush()
-        session.clear()
+        sessionFactory.getCurrentSession().with {
+            flush()
+            clear()
+        }
     }
 }
