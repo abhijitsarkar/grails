@@ -3,19 +3,34 @@ package name.abhijitsarkar.moviedatabase.web
 import grails.transaction.Transactional
 
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
+import name.abhijitsarkar.moviedatabase.service.MovieRipSearchService
+import name.abhijitsarkar.moviedatabase.service.MovieRipIndexService
 
-@Transactional(readOnly = true)
+@Transactional
 class MovieRipController {
 
-	def index(Integer max) {
+	/* Dependency Injection gotcha: Grails uses autowiring by name; the type isn't really used. */
+	MovieRipSearchService movieRipSearchService
+	MovieRipIndexService movieRipIndexService
+
+	def show(final Integer max) {
+		log.debug("Params: ${params}.")
+
 	    params.max = Math.min(max ?: 10, 100)
 
-	    MovieRip mr = new MovieRip()
-	    mr.properties = request
+	    final String searchFieldName = params.fieldName?.trim()
+	    final String searchFieldValue = params.fieldValue?.trim() ?: ''
 
-	    final int count = MovieRip.count()
-	    log.debug("Found ${count} movie rips.")
+	    final Collection<MovieRip> movieRips = movieRipSearchService.search(searchFieldName, searchFieldValue, params.max)
 
-	    respond MovieRip.list(params), model: [movieCount: count]
+	    respond movieRips, model: [movieCount: movieRips.size()]
+	}
+
+	def save(final String movieDirectory) {
+		log.debug("Params: ${params}.")
+
+	    movieRipIndexService.index(movieDirectory)
+
+	    respond movieDirectory
 	}
 }

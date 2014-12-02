@@ -18,13 +18,13 @@ import org.springframework.transaction.PlatformTransactionManager
 /**
  * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
  */
-@TestFor(MovieRipService)
+@TestFor(MovieRipIndexService)
 class MovieRipServiceSpec extends Specification {
 
-    @Shared MovieRipService service
+    @Shared MovieRipIndexService service
 
     def setupSpec() {
-        service = new MovieRipService(genres: getGenres(), includes: getIncludes())
+        service = new MovieRipIndexService(genres: getGenres(), includes: getIncludes())
 
         /* GRAILS-10538 - Test of service doesn't work with @Transactional annotation */
         service.transactionManager = Mock(PlatformTransactionManager) { 

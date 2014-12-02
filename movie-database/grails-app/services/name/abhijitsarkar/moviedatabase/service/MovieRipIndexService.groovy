@@ -5,23 +5,53 @@ import static java.nio.file.Files.walk
 import static java.nio.file.Files.isDirectory
 import static java.nio.file.Files.size
 
+import static org.springframework.util.Assert.isTrue
+
 import static name.abhijitsarkar.moviedatabase.service.MovieRipParser.fileExtension
 import static name.abhijitsarkar.moviedatabase.service.MovieRipParser.parse
 
 import java.nio.file.Path
+import javax.annotation.PostConstruct
 
 import grails.transaction.Transactional
+
+import org.hibernate.SessionFactory
+import org.hibernate.Session
 
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
 
 @Transactional
-class MovieRipService {
+class MovieRipIndexService {
 
     Collection<String> genres
 
     Collection<String> includes
 
-    Collection<MovieRip> getMovieRips(String movieDirectory) {
+    SessionFactory sessionFactory
+
+    private Session session
+
+    @PostConstruct
+    void postConstruct() {
+        isTrue(genres, "Genres must not be null or empty.")
+        isTrue(includes, "Includes must not be null or empty.")
+
+        session = sessionFactory.getCurrentSession()
+
+        isTrue(session, "Session must not be null.")
+    }
+
+    int index(final String movieDirectory) {
+        getMovieRips().eachWithIndex { MovieRip m, int index ->
+            MovieRip.save(m)
+
+            if (!(index % 100)) {
+                cleanUpSession()
+            }
+        }
+    }
+
+    private Collection<MovieRip> getMovieRips(final String movieDirectory) {
         log.debug("Indexing movies from ${movieDirectory}")
 
         final Path rootDir = get(movieDirectory)
@@ -92,5 +122,10 @@ class MovieRipService {
         }
 
         getParent(parent, currentGenre, rootDirectory, parent.fileName.toString())
+    }
+
+    private void cleanUpSession() {
+        session.flush()
+        session.clear()
     }
 }

@@ -1,7 +1,8 @@
 class UrlMappings {
 
 	static mappings = {
-        "/movies(.(*))"(controller: 'movieRip', action: 'index', method: 'GET')
+        "/movies(.$format)?"(controller: 'movieRip', action: 'show', method: 'GET')
+        "/movies(.$format)?"(controller: 'movieRip', action: 'save', method: 'POST')
 
         "500"(view:'/error')
 	}

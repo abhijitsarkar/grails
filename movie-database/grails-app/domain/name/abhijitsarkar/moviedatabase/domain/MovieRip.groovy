@@ -1,6 +1,13 @@
 package name.abhijitsarkar.moviedatabase.domain
 
+import grails.gorm.DetachedCriteria
+
+import org.apache.commons.logging.LogFactory
+import org.apache.commons.logging.Log
+
 class MovieRip implements Comparable {
+
+    private static final Log log = LogFactory.getLog(this)
 
 	static hasMany = [genres: String, stars: CastAndCrew]
 
@@ -75,5 +82,13 @@ class MovieRip implements Comparable {
             return releaseYearDiff
         }
         title?.hashCode() - other.title?.hashCode()
+    }
+
+    static Collection<MovieRip> findAllByField(final String fieldName, final String fieldValue, final int max) {
+        log.debug("Search will be limited to field: ${fieldName} like value: ${fieldValue}.")
+
+        final DetachedCriteria<MovieRip> query = new DetachedCriteria<MovieRip>(MovieRip)
+
+        query.ilike(fieldName, "%${fieldValue}%").list()
     }
 }

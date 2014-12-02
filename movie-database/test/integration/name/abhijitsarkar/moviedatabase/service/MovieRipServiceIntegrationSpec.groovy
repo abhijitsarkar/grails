@@ -11,13 +11,13 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.transaction.TransactionStatus
 import org.springframework.transaction.PlatformTransactionManager
 
-class MovieRipServiceIntegrationSpec extends IntegrationSpec {
+class MovieRipIndexServiceIntegrationSpec extends IntegrationSpec {
 
 	final static movieDirectory = new ClassPathResource('resources/movies').file.absolutePath
-	@Shared def service = new MovieRipService(genres: getGenres(), includes: getIncludes())
+	@Shared def service = new MovieRipIndexService(genres: getGenres(), includes: getIncludes())
 
 	def setupSpec() {
-        service = new MovieRipService(genres: getGenres(), includes: getIncludes())
+        service = new MovieRipIndexService(genres: getGenres(), includes: getIncludes())
 
         /* GRAILS-10538 - Test of service doesn't work with @Transactional annotation */
         service.transactionManager = Mock(PlatformTransactionManager) { 
@@ -27,7 +27,7 @@ class MovieRipServiceIntegrationSpec extends IntegrationSpec {
 
     void 'test that movie rips are parsed as expected'() {
     	when:
-    	def movieRips = service.getMovieRips(movieDirectory)
+    	def movieRips = service.index(movieDirectory)
 
     	then:
     	movieRips?.size() == 3
