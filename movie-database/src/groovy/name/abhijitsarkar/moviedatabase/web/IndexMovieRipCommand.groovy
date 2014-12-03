@@ -3,6 +3,7 @@ package name.abhijitsarkar.moviedatabase.web
 import groovy.transform.ToString
 
 import grails.validation.Validateable
+import org.grails.databinding.BindUsing
 
 import name.abhijitsarkar.moviedatabase.service.MovieRipIndexService
 
@@ -16,9 +17,12 @@ class IndexMovieRipCommand {
 
 	MovieRipIndexService movieRipIndexService
 
+	@BindUsing({
+        obj, source -> source['movieDirectory']?.trim()
+    })
 	String movieDirectory
 
 	int index() {
-		movieRipIndexService.index(movieDirectory)
+		getMovieRipIndexService().index(movieDirectory)
 	}
 }

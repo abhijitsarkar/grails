@@ -15,7 +15,6 @@ class MovieRipTestHelper {
 
             fileSize = 1L
             fileExtension = '.mkv'
-            //parent = 'Sci-Fi'
 
             delegate
         }
@@ -23,13 +22,13 @@ class MovieRipTestHelper {
 
     static MovieRip terminator2MovieRip() {
         terminator2MovieRipLite().with {
-            director = new CastAndCrew('James Cameron')
+            director = new CastAndCrew(name: 'James Cameron')
 
             Collection<CastAndCrew> stars = [] as Set
-            stars.add(new CastAndCrew('Arnold Schwarzenegger'))
-            stars.add(new CastAndCrew('Linda Hamilton'))
-            stars.add(new CastAndCrew('Edward Furlong'))
-            stars.add(new CastAndCrew('Robert Patrick'))
+            stars.add(new CastAndCrew(name: 'Arnold Schwarzenegger'))
+            stars.add(new CastAndCrew(name: 'Linda Hamilton'))
+            stars.add(new CastAndCrew(name: 'Edward Furlong'))
+            stars.add(new CastAndCrew(name: 'Robert Patrick'))
 
             delegate.stars = stars
 

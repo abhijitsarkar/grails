@@ -14,6 +14,8 @@ class SearchMovieRipCommand {
 
 	MovieRipSearchService movieRipSearchService
 
+	/* GOTCHA ALERT: data binding is not triggered if the parameter is not present in the request */
+
 	@BindUsing({
         obj, source -> source['fieldName']?.trim()
     })
@@ -27,11 +29,11 @@ class SearchMovieRipCommand {
 	@BindUsing({
         obj, source ->  Math.min(source['max'] ?: 10, 100) 
     })
-	int max
+	int max = 10
 
 	Collection<MovieRip> search() {
 		log.debug("fieldName: ${fieldName}, fieldValue: ${fieldValue}, max: ${max}.")
-		
-		movieRipSearchService.search(fieldName, fieldValue, max)
+
+		getMovieRipSearchService().search(fieldName, fieldValue, max)
 	}
 }
