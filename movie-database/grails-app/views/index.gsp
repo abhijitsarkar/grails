@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta name="layout" content="main"/>
-		<title>Welcome to Grails</title>
+		<title>Welcome to the Movie Database</title>
 		<style type="text/css" media="screen">
 			#status {
 				background-color: #eee;
@@ -103,18 +103,12 @@
 			</ul>
 		</div>
 		<div id="page-body" role="main">
-			<h1>Welcome to Grails</h1>
-			<p>Congratulations, you have successfully started your first Grails application! At the moment
-			   this is the default page, feel free to modify it to either redirect to a controller or display whatever
-			   content you may choose. Below is a list of controllers that are currently deployed in this application,
-			   click on each to execute its default action:</p>
+			<h1>Welcome to the Movie Database</h1>
 
-			<div id="controller-list" role="navigation">
-				<h2>Available Controllers:</h2>
+			<div id="actions" role="navigation">
+				<h2>Available Actions:</h2>
 				<ul>
-					<g:each var="c" in="${grailsApplication.controllerClasses.sort { it.fullName } }">
-						<li class="controller"><g:link controller="${c.logicalPropertyName}">${c.fullName}</g:link></li>
-					</g:each>
+					<li><g:link class="index" uri="/movies">View all movie rips</g:link></li>
 				</ul>
 			</div>
 		</div>

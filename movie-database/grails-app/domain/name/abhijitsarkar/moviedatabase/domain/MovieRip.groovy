@@ -35,7 +35,10 @@ class MovieRip implements Comparable {
 
     @Override
     boolean equals(Object obj) {
-        if (!this.class.isAssignableFrom(obj?.class)) {
+        /* You'd think that the class of an object can neve be null but you'd be wrong. Grails pulls it off when converting to JSON;
+           obj class comes out to be org.codehaus.groovy.grails.web.json.JSONObject$Null causing a NPE.
+        */
+        if (!obj?.class || !this.class.isAssignableFrom(obj?.class)) {
             return false
         }
 

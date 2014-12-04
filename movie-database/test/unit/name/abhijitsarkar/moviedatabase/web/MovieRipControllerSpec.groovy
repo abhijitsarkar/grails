@@ -3,13 +3,17 @@ package name.abhijitsarkar.moviedatabase.web
 import static name.abhijitsarkar.moviedatabase.domain.test.MovieRipTestHelper.terminator2MovieRipLite
 
 import grails.test.mixin.TestFor
+import grails.test.mixin.Mock
+
 import spock.lang.Specification
 import spock.lang.Shared
 
 import name.abhijitsarkar.moviedatabase.service.MovieRipSearchService
 import name.abhijitsarkar.moviedatabase.service.MovieRipIndexService
+import name.abhijitsarkar.moviedatabase.domain.MovieRip
 
 @TestFor(MovieRipController)
+@Mock(MovieRip)
 class MovieRipControllerSpec extends Specification {
 
 	/* For unknown reason, Spock mock doesn't work; throws NPE when defining interactions in test methods */
@@ -31,7 +35,7 @@ class MovieRipControllerSpec extends Specification {
         response.format = 'json'
     }
 
-    void 'test that trailing space in the field name is trimmed during search command data binding'() {
+    void 'test that search parameters in the request are set to expected values during command data binding'() {
     	setup:
     	params.fieldName = 'fieldNameWithTrailingSpace '
     	params.fieldValue = null
@@ -46,15 +50,17 @@ class MovieRipControllerSpec extends Specification {
     	}
 
     	when:
-    	controller.show()
+    	controller.index()
 
     	then:
     	mockSearchService.verify()
 
     	response.status == 200
-    	response.json.size() == 1
+    	response.json.size() == 2
 
-    	response.json[0].title == 'Terminator 2 Judgment Day'
+        response.json.movieRips.size() == 1
+
+    	response.json.movieRips[0].title == 'Terminator 2 Judgment Day'
     }
 
     void 'test that when search parameters are not present in the request, they are assigned default values'() {
@@ -68,18 +74,20 @@ class MovieRipControllerSpec extends Specification {
     	}
 
     	when:
-    	controller.show()
+    	controller.index()
 
     	then:
     	mockSearchService.verify()
 
     	response.status == 200
-    	response.json.size() == 1
+    	response.json.size() == 2
 
-    	response.json[0].title == 'Terminator 2 Judgment Day'
+    	response.json.movieRips.size() == 1
+
+        response.json.movieRips[0].title == 'Terminator 2 Judgment Day'
     }
 
-    void 'test that trailing space in the movie directory path is trimmed during index command data binding'() {
+    void 'test that index parameter in request is set to expected value during command data binding'() {
     	setup:
     	params.movieDirectory = 'movieDirectoryWithTrailingSpace '
 
@@ -96,17 +104,38 @@ class MovieRipControllerSpec extends Specification {
     	mockIndexService.verify()
 
     	response.status == 200
-    	response.json.size() == 2
-
-    	response.json.movieDirectory == 'movieDirectoryWithTrailingSpace'
     	response.json.count == 1
     }
 
-    void 'test that when index parameter is not present in the request, an error response is returned'() {
+    void 'test that index returns an error if movie directory is not in the request'() {
     	when:
     	controller.save()
 
     	then:
     	response.status == 400
+    }
+
+    void 'test that when an id param is present in the request, a movie rip is looked up by id and injected in the method'() {
+        setup:
+        terminator2MovieRipLite().save(flush: true)
+        
+        params.id = 1
+
+        when:
+        controller.show()
+
+        then:
+        response.status == 200
+        response.json.movieRip.title == 'Terminator 2 Judgment Day'
+    }
+
+    void 'test that show returns an error if there is no movie rip for the specified id'() {
+        params.id = 1
+
+        when:
+        controller.show()
+
+        then:
+        response.status == 404
     }
 }
