@@ -1,5 +1,10 @@
 package name.abhijitsarkar.moviedatabase.web
 
+import static org.springframework.http.HttpStatus.OK
+import static org.springframework.http.HttpStatus.CREATED
+import static org.springframework.http.HttpStatus.BAD_REQUEST
+import static org.springframework.http.HttpStatus.NOT_FOUND
+
 import static name.abhijitsarkar.moviedatabase.domain.test.MovieRipTestHelper.terminator2MovieRipLite
 
 import grails.test.mixin.TestFor
@@ -55,12 +60,12 @@ class MovieRipControllerSpec extends Specification {
     	then:
     	mockSearchService.verify()
 
-    	response.status == 200
-    	response.json.size() == 2
+    	response.status == OK.value()
+    	response.json.size() == 1
 
-        response.json.movieRips.size() == 1
+        response.json.command.movieRips.size() == 1
 
-    	response.json.movieRips[0].title == 'Terminator 2 Judgment Day'
+    	response.json.command.movieRips[0].title == 'Terminator 2 Judgment Day'
     }
 
     void 'test that when search parameters are not present in the request, they are assigned default values'() {
@@ -79,12 +84,12 @@ class MovieRipControllerSpec extends Specification {
     	then:
     	mockSearchService.verify()
 
-    	response.status == 200
-    	response.json.size() == 2
+    	response.status == OK.value()
+    	response.json.size() == 1
 
-    	response.json.movieRips.size() == 1
+    	response.json.command.movieRips.size() == 1
 
-        response.json.movieRips[0].title == 'Terminator 2 Judgment Day'
+        response.json.command.movieRips[0].title == 'Terminator 2 Judgment Day'
     }
 
     void 'test that index parameter in request is set to expected value during command data binding'() {
@@ -103,8 +108,8 @@ class MovieRipControllerSpec extends Specification {
     	then:
     	mockIndexService.verify()
 
-    	response.status == 200
-    	response.json.count == 1
+    	response.status == CREATED.value()
+        response.json.command.count == 1
     }
 
     void 'test that index returns an error if movie directory is not in the request'() {
@@ -112,7 +117,7 @@ class MovieRipControllerSpec extends Specification {
     	controller.save()
 
     	then:
-    	response.status == 400
+    	response.status == BAD_REQUEST.value()
     }
 
     void 'test that when an id param is present in the request, a movie rip is looked up by id and injected in the method'() {
@@ -125,7 +130,8 @@ class MovieRipControllerSpec extends Specification {
         controller.show()
 
         then:
-        response.status == 200
+        response.status == OK.value()
+
         response.json.movieRip.title == 'Terminator 2 Judgment Day'
     }
 
@@ -136,6 +142,7 @@ class MovieRipControllerSpec extends Specification {
         controller.show()
 
         then:
-        response.status == 404
+        response.status == NOT_FOUND.value()
+        !response.json.movieRip
     }
 }

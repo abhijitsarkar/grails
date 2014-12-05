@@ -6,6 +6,7 @@ class UrlMappings {
     	}
 
     	"/movies/${id}(.$format)?"(controller: 'movieRip', action: 'show')
+    	"/movies/create(.$format)?"(controller: 'movieRip', action: 'create')
 
     	"/"(view:"/index")
         "500"(view:'/error')

@@ -22,7 +22,15 @@ class IndexMovieRipCommand {
     })
 	String movieDirectory
 
-	int index() {
-		getMovieRipIndexService().index(movieDirectory)
+	private int count
+
+	void index() {
+		count = getMovieRipIndexService().index(movieDirectory)
+
+		log.debug("Indexed ${count} movie rips.")
+	}
+
+	int getCount() {
+		count
 	}
 }

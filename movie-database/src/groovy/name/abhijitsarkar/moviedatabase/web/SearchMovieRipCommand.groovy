@@ -31,9 +31,24 @@ class SearchMovieRipCommand {
     })
 	int max = 10
 
-	Collection<MovieRip> search() {
+	private int count
+	private Collection<MovieRip> movieRips = [] as List
+
+	void search() {
 		log.debug("fieldName: ${fieldName}, fieldValue: ${fieldValue}, max: ${max}.")
 
-		getMovieRipSearchService().search(fieldName, fieldValue, max)
+		movieRips = getMovieRipSearchService().search(fieldName, fieldValue, max)
+
+		count = movieRips.size()
+
+		log.debug("Found ${count} movie rips.")
+	}
+
+	Collection<MovieRip> getMovieRips() {
+		movieRips
+	}
+
+	int getCount() {
+		count
 	}
 }
