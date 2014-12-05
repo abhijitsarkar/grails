@@ -7,12 +7,12 @@ import name.abhijitsarkar.moviedatabase.domain.MovieRip
 class BootStrap {
 
     def init = { servletContext ->
-    	if (!MovieRip.findAllByTitle('Terminator 2 Judgment Day')) {
-			MovieRip m = terminator2MovieRip()
-			saveCastAndCrew(m)
+    	//if (!MovieRip.findAllByTitle('Terminator 2 Judgment Day')) {
+		//	MovieRip m = terminator2MovieRip()
+		//	saveCastAndCrew(m)
 
-        	m.save(failOnError: true)
-    	}
+        //	m.save(failOnError: true)
+    	//}
     }
 
     private saveCastAndCrew(m) {
