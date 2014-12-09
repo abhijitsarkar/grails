@@ -13,10 +13,10 @@ import org.hibernate.Session
 
 class MovieRipIndexServiceIntegrationSpec extends IntegrationSpec {
 
-	final static movieDirectory = new ClassPathResource('resources/movies').file.absolutePath
+	final static String movieDirectory = new ClassPathResource('resources/movies').file.absolutePath
 	@Shared def service
 
-	def setupSpec() {
+	void setupSpec() {
         service = new MovieRipIndexService()
 
         /* GRAILS-10538 - Test of service doesn't work with @Transactional annotation */

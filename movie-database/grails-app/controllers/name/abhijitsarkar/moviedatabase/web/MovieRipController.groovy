@@ -7,10 +7,13 @@ import static org.springframework.http.HttpStatus.NOT_FOUND
 
 import org.springframework.http.HttpStatus
 
+import grails.plugin.cache.Cacheable
+
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
 
 class MovieRipController {
 
+	@Cacheable(value='movieRipCache')
 	def index(final SearchMovieRipCommand cmd) {
 		final Map<String, SearchMovieRipCommand> resp = ['command': cmd]
 
@@ -19,6 +22,7 @@ class MovieRipController {
 		respond(resp as Map, [model: resp])
 	}
 
+	@Cacheable(value='movieRipCache')
 	def save(final IndexMovieRipCommand cmd) {
 		HttpStatus responseStatus = null
 		final Map<String, IndexMovieRipCommand> resp = ['command': cmd]
@@ -27,12 +31,15 @@ class MovieRipController {
 			responseStatus = BAD_REQUEST
 		} else {
 			cmd.index()
+			flash.message = "Indexed ${cmd.count} movie rips."
+
 			responseStatus = CREATED
 		}
 
 		respond(resp as Map, [status: responseStatus, view: 'create', model: resp])    
 	}
 
+	@Cacheable(value='movieRipCache', key="#m != null ? m.id : ''")
 	def show(final MovieRip m) {
 		final Map<String, MovieRip> resp = ['movieRip': m]
 

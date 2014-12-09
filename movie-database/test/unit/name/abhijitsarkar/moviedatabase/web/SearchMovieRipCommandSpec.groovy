@@ -1,36 +1,66 @@
 package name.abhijitsarkar.moviedatabase.web 
 
-import grails.test.mixin.TestMixin
-import grails.test.mixin.web.ControllerUnitTestMixin
-
 import spock.lang.Specification
-import spock.lang.Ignore
 
 import name.abhijitsarkar.moviedatabase.service.MovieRipSearchService
 
-@TestMixin(ControllerUnitTestMixin)
-@Ignore
 class SearchMovieRipCommandSpec extends Specification {
 
-	def setup() {
-		mockCommandObject(SearchMovieRipCommand)
+	def 'test that equals considers only fieldName and fieldValue'() {
+		when:
+		SearchMovieRipCommand cmd1 = new SearchMovieRipCommand(
+			fieldName: 'f1 ', fieldValue: 'v1', max: 1)
+		SearchMovieRipCommand cmd2 = new SearchMovieRipCommand(
+			fieldName: 'f1 ', fieldValue: 'v1', max: 2)
+
+		then:
+		cmd1 == cmd2
+
+		when:
+		cmd1 = new SearchMovieRipCommand(
+			fieldName: 'f1 ', fieldValue: 'v1', max: 1)
+		cmd2 = new SearchMovieRipCommand(
+			fieldName: 'f2 ', fieldValue: 'v1', max: 1)
+
+		then:
+		cmd1 != cmd2
+
+		when:
+		cmd1 = new SearchMovieRipCommand(
+			fieldName: 'f1 ', fieldValue: 'v1', max: 1)
+		cmd2 = new SearchMovieRipCommand(
+			fieldName: 'f1 ', fieldValue: 'v2', max: 1)
+
+		then:
+		cmd1 != cmd2
 	}
 
-	def 'test that command object fields are validated'() {
-		setup:
-		//MovieRipSearchService service = Mock(MovieRipSearchService)
-		//1 * service.search('fieldNameWithTrailingSpace', 'terminator', 100) >> []
+	def 'test that hashCode considers only fieldName and fieldValue'() {
+		when:
+		SearchMovieRipCommand cmd1 = new SearchMovieRipCommand(
+			fieldName: 'f1 ', fieldValue: 'v1', max: 1)
+		SearchMovieRipCommand cmd2 = new SearchMovieRipCommand(
+			fieldName: 'f1 ', fieldValue: 'v1', max: 2)
 
-		SearchMovieRipCommand cmd = new SearchMovieRipCommand(
-			fieldName: 'fieldNameWithTrailingSpace ', fieldValue: 'terminator', max: 101)
+		then:
+		cmd1.hashCode() == cmd2.hashCode()
 
-		//cmd.movieRipSearchService = service
+		when:
+		cmd1 = new SearchMovieRipCommand(
+			fieldName: 'f1 ', fieldValue: 'v1', max: 1)
+		cmd2 = new SearchMovieRipCommand(
+			fieldName: 'f2 ', fieldValue: 'v1', max: 1)
 
-		expect:
-		cmd.validate()
+		then:
+		cmd1.hashCode() != cmd2.hashCode()
 
-		cmd.fieldName == 'fieldNameWithTrailingSpace'
-		cmd.fieldValue == 'terminator'
-		cmd.max == 100
-	}	
+		when:
+		cmd1 = new SearchMovieRipCommand(
+			fieldName: 'f1 ', fieldValue: 'v1', max: 1)
+		cmd2 = new SearchMovieRipCommand(
+			fieldName: 'f1 ', fieldValue: 'v2', max: 1)
+
+		then:
+		cmd1.hashCode() != cmd2.hashCode()
+	}
 }

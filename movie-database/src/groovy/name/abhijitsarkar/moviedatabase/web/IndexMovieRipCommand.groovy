@@ -1,5 +1,6 @@
 package name.abhijitsarkar.moviedatabase.web
 
+import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
 import grails.validation.Validateable
@@ -8,7 +9,8 @@ import org.grails.databinding.BindUsing
 import name.abhijitsarkar.moviedatabase.service.MovieRipIndexService
 
 @Validateable
-@ToString
+@EqualsAndHashCode(includes = ['movieDirectory'])
+@ToString(includes = ['movieDirectory'])
 class IndexMovieRipCommand {
 
 	static constraints = {

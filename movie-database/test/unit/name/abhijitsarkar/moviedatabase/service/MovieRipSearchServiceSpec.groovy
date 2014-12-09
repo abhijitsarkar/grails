@@ -14,7 +14,7 @@ class MovieRipSearchServiceSpec extends Specification {
 	/* Can't use setupSpec. Tries to save before GORM is initialized and throws the following error:
        "Method on class [name.abhijitsarkar.moviedatabase.domain.MovieRip] was used outside of a Grails application."
     */
-    def setup() {
+    void setup() {
          MovieRip m = new MovieRip(
      		title: 'A Beautiful Mind',            
             genres: ['Drama'] as Set,

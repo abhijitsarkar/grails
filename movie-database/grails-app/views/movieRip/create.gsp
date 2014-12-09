@@ -25,7 +25,7 @@
 				</g:eachError>
 			</ul>
 			</g:hasErrors>
-			<g:form relativeUri="save">
+			<g:form relativeUri="">
 				<fieldset class="form">
 					<div class="fieldcontain ${hasErrors(bean: command, 'error')} required">
 						<label for="movieDirectory">

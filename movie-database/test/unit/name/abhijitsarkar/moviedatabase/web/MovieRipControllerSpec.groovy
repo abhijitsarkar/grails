@@ -25,7 +25,7 @@ class MovieRipControllerSpec extends Specification {
 	@Shared def mockSearchService = mockFor(MovieRipSearchService)
 	@Shared def mockIndexService = mockFor(MovieRipIndexService)
 
-    def setupSpec() {
+    void setupSpec() {
     	SearchMovieRipCommand.metaClass.getMovieRipSearchService = { ->
     		mockSearchService.createMock()
     	}
@@ -35,7 +35,7 @@ class MovieRipControllerSpec extends Specification {
     	}
     }
 
-    def setup() {
+    void setup() {
     	request.method = 'GET'
         response.format = 'json'
     }

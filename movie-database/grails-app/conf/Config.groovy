@@ -119,4 +119,15 @@ log4j.main = {
 
     //debug 'org.hibernate.SQL'
     //trace 'org.hibernate.type.descriptor.sql.BasicBinder'
+
+    error stdout: 'StackTrace'
+}
+
+grails.cache.enabled = true
+grails.cache.proxyTargetClass = true
+
+grails.cache.config = {
+   cache {
+      name 'movieRipCache'
+   }
 }

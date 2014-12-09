@@ -1,9 +1,9 @@
 package name.abhijitsarkar.moviedatabase.service
 
-import static java.nio.file.Paths.get
 import static java.nio.file.Files.walk
 import static java.nio.file.Files.isDirectory
 import static java.nio.file.Files.size
+import static java.nio.file.Paths.get
 
 import static name.abhijitsarkar.moviedatabase.service.MovieRipParser.fileExtension
 import static name.abhijitsarkar.moviedatabase.service.MovieRipParser.parse
@@ -46,11 +46,9 @@ class MovieRipIndexService {
     SessionFactory sessionFactory
 
     int index(final String movieDirectory) {
-        log.debug("Indexing movies from ${movieDirectory}")
-
         int count = 0
 
-        getMovieRips(movieDirectory).eachWithIndex { MovieRip m, int index ->
+        getMovieRips(get(movieDirectory).toAbsolutePath()).eachWithIndex { MovieRip m, int index ->
             m.save()
 
             if (!(index % 100)) {
@@ -66,12 +64,8 @@ class MovieRipIndexService {
     }
 
     @PackageScope
-    Collection<MovieRip> getMovieRips(final String movieDirectory) {
-        final Path rootDir = get(movieDirectory)
-
-        if (!rootDir.isAbsolute()) {
-            log.warn("Path ${movieDirectory} is not absolute and is resolved to ${rootDir.toAbsolutePath().toString()}.")
-        }
+    Collection<MovieRip> getMovieRips(final Path rootDir) {
+        log.debug("Indexing movies from ${rootDir.toString()}")
 
         String currentGenre
         final Collection<MovieRip> movieRips = [] as SortedSet

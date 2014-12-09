@@ -1,5 +1,6 @@
 package name.abhijitsarkar.moviedatabase.web
 
+import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
 import org.grails.databinding.BindUsing
@@ -9,7 +10,8 @@ import name.abhijitsarkar.moviedatabase.service.MovieRipSearchService
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
 
 @Validateable
-@ToString
+@EqualsAndHashCode(includes = ['fieldName', 'fieldValue'])
+@ToString(includes = ['fieldName', 'fieldValue'])
 class SearchMovieRipCommand {
 
 	MovieRipSearchService movieRipSearchService

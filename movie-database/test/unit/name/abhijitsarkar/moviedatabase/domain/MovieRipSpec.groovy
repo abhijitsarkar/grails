@@ -10,12 +10,9 @@ class MovieRipSpec extends Specification {
 	private MovieRip m
     private MovieRip o
 
-    def setup() {
+    void setup() {
     	m = terminator2MovieRip()
         o = terminator2MovieRipLite()
-    }
-
-    def cleanup() {
     }
 
     void 'test that properties are set as expected when a new movie rip is created'() {
