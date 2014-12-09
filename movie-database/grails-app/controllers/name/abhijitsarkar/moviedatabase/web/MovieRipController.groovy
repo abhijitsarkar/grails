@@ -22,7 +22,7 @@ class MovieRipController {
 		respond(resp as Map, [model: resp])
 	}
 
-	@Cacheable(value='movieRipCache')
+	@Cacheable(value='movieRipCache', key='#cmd.movieDirectory')
 	def save(final IndexMovieRipCommand cmd) {
 		HttpStatus responseStatus = null
 		final Map<String, IndexMovieRipCommand> resp = ['command': cmd]
