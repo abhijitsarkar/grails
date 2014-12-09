@@ -8,6 +8,7 @@ import org.grails.datastore.mapping.query.api.Criteria
 import org.apache.commons.logging.LogFactory
 import org.apache.commons.logging.Log
 
+/* GRAILS-11868 - Compilation fails if domain class uses @Delegate to another with relationship */
 @ToString
 class MovieRip implements Comparable {
 

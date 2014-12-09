@@ -11,6 +11,10 @@ import grails.plugin.cache.Cacheable
 
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
 
+/* GRAILS-11859 - respond method gives preference to User-Agent header rather than Accept 
+   GRAILS-11860 - PageFragmentCachingFilter.doFilter throws NPE (This I found was caused by an incorrect form post URL where show 
+   was being called instead of save. Still NPE is unacceptable.)
+*/
 class MovieRipController {
 
 	@Cacheable(value='movieRipCache')
@@ -22,6 +26,7 @@ class MovieRipController {
 		respond(resp as Map, [model: resp])
 	}
 
+	/* GRAILS-11869 - Cacheable advice executes before command object is initialized, throws NPE */
 	@Cacheable(value='movieRipCache')
 	def save(final IndexMovieRipCommand cmd) {
 		HttpStatus responseStatus = null
