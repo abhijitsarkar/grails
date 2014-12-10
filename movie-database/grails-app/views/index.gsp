@@ -108,7 +108,7 @@
 			<div id="actions" role="navigation">
 				<h2>Available Actions:</h2>
 				<ul>
-					<li><g:link class="index" uri="/movies">View all movie rips</g:link></li>
+					<li><g:link class="index" uri="/movies">View movie rips</g:link></li>
 					<li><g:link class="create" uri="/movies/create">Index movie rips</g:link></li>
 				</ul>
 			</div>

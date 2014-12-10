@@ -123,7 +123,7 @@ log4j.main = {
     error stdout: 'StackTrace'
 }
 
-grails.cache.enabled = true
+grails.cache.enabled = false
 grails.cache.proxyTargetClass = true
 
 grails.cache.config = {

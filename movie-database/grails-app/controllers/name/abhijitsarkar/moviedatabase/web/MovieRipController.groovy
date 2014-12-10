@@ -56,6 +56,6 @@ class MovieRipController {
 	}
 
 	def create() {
-		respond([status: OK])
+		respond(status: OK)
 	}
 }
