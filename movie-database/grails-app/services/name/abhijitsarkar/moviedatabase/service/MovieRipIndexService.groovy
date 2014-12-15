@@ -1,56 +1,40 @@
 package name.abhijitsarkar.moviedatabase.service
 
-import static java.nio.file.Paths.get
 import static java.nio.file.Files.walk
 import static java.nio.file.Files.isDirectory
 import static java.nio.file.Files.size
+import static java.nio.file.Paths.get
+
+import static org.springframework.util.Assert.notEmpty
 
 import static name.abhijitsarkar.moviedatabase.service.MovieRipParser.fileExtension
 import static name.abhijitsarkar.moviedatabase.service.MovieRipParser.parse
 
 import java.nio.file.Path
+import javax.annotation.PostConstruct
 
 import groovy.transform.PackageScope
 import grails.transaction.Transactional
-
-import org.hibernate.SessionFactory
 
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
 
 @Transactional
 class MovieRipIndexService {
 
-    Collection<String> genres = 
-        [
-            'Action and Adventure',
-            'Animation',
-            'Comedy',
-            'Documentary',
-            'Drama',
-            'Horror',
-            'R-Rated Mainstream Movies',
-            'Romance',
-            'Sci-Fi',
-            'Thriller'
-        ] as Set
+    Collection<String> genres
 
-    Collection<String> includes = 
-        [
-            '.avi',
-            '.mkv',
-            '.mp4',
-            '.divx',
-            '.mov'
-        ] as Set
+    Collection<String> includes
 
-    SessionFactory sessionFactory
+    @PostConstruct
+    void postConstruct() {
+        notEmpty(genres as Collection, 'Genres must not be null or empty.')
+        notEmpty(includes as Collection, 'Includes must not be null or empty.')
+    }
 
     int index(final String movieDirectory) {
-        log.debug("Indexing movies from ${movieDirectory}")
-
         int count = 0
 
-        getMovieRips(movieDirectory).eachWithIndex { MovieRip m, int index ->
+        getMovieRips(get(movieDirectory).toAbsolutePath()).eachWithIndex { MovieRip m, int index ->
             m.save()
 
             if (!(index % 100)) {
@@ -66,12 +50,8 @@ class MovieRipIndexService {
     }
 
     @PackageScope
-    Collection<MovieRip> getMovieRips(final String movieDirectory) {
-        final Path rootDir = get(movieDirectory)
-
-        if (!rootDir.isAbsolute()) {
-            log.warn("Path ${movieDirectory} is not absolute and is resolved to ${rootDir.toAbsolutePath().toString()}.")
-        }
+    Collection<MovieRip> getMovieRips(final Path rootDir) {
+        log.debug("Indexing movies from ${rootDir.toString()}")
 
         String currentGenre
         final Collection<MovieRip> movieRips = [] as SortedSet
@@ -141,9 +121,9 @@ class MovieRipIndexService {
     }
 
     private void cleanUpSession() {
-        sessionFactory.getCurrentSession().with {
-            flush()
-            clear()
+        MovieRip.withSession { session ->
+            session.flush()
+            session.clear()
         }
     }
 }
