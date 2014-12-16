@@ -4,14 +4,21 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.Files
 
-import grails.test.mixin.TestFor
 import spock.lang.Specification
+import spock.lang.Ignore
+import spock.lang.Shared
 
-/**
- * See the API for {@link grails.test.mixin.services.ServiceUnitTestMixin} for usage instructions
- */
-@TestFor(MovieRipIndexService)
+@Ignore('GRAILS-11878')
 class MovieRipIndexServiceSpec extends Specification {
+
+    @Shared def service
+
+    void setupSpec() {
+        ServiceHelper serviceHelper = new ServiceHelper()
+        service = new MovieRipIndexService(
+                genres: serviceHelper.genres, includes: serviceHelper.includes
+        )
+    }
 
     void 'test that a genre is correctly identified'() {
     	expect:

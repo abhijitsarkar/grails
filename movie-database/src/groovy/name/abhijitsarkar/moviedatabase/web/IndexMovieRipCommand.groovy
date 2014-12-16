@@ -4,7 +4,6 @@ import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
 import grails.validation.Validateable
-import org.grails.databinding.BindUsing
 
 import name.abhijitsarkar.moviedatabase.service.MovieRipIndexService
 
@@ -19,9 +18,6 @@ class IndexMovieRipCommand {
 
 	MovieRipIndexService movieRipIndexService
 
-	@BindUsing({
-        obj, source -> source['movieDirectory']?.trim()
-    })
 	String movieDirectory
 
 	private int count

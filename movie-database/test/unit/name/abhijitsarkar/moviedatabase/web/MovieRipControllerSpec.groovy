@@ -18,7 +18,7 @@ import name.abhijitsarkar.moviedatabase.service.MovieRipIndexService
 import name.abhijitsarkar.moviedatabase.domain.MovieRip
 
 @TestFor(MovieRipController)
-@Mock(MovieRip)
+@Mock([MovieRip, SiteFilters])
 class MovieRipControllerSpec extends Specification {
 
 	/* For unknown reason, Spock mock doesn't work; throws NPE when defining interactions in test methods */
@@ -43,19 +43,19 @@ class MovieRipControllerSpec extends Specification {
     void 'test that search parameters in the request are set to expected values during command data binding'() {
     	setup:
     	params.fieldName = 'fieldNameWithTrailingSpace '
-    	params.fieldValue = null
+    	params.fieldValue = ''
     	params.max = 101
 
     	mockSearchService.demand.search { fieldName, fieldValue, max -> 
     		assert fieldName == 'fieldNameWithTrailingSpace'
-    		assert fieldValue == ''
+    		assert fieldValue == null
     		assert max == 100
 
     		[terminator2MovieRipLite()] as List
     	}
 
     	when:
-    	controller.index()
+        controller.index()
 
     	then:
     	mockSearchService.verify()

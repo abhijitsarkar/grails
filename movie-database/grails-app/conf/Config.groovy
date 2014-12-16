@@ -99,9 +99,10 @@ environments {
 }
 
 // log4j configuration
-log4j.main = {
+log4j = {
     appenders {
         console name:'stdout', layout:pattern(conversionPattern: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%p] %c{3} - %m%n')
+        'null' name: "stacktrace"
     }
 
     root {

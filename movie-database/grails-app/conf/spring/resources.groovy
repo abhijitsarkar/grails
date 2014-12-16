@@ -1,13 +1,16 @@
-import grails.rest.render.json.JsonRenderer
-import grails.rest.render.json.JsonCollectionRenderer
-
-import name.abhijitsarkar.moviedatabase.domain.CastAndCrew
+import name.abhijitsarkar.moviedatabase.service.ServiceHelper
+import name.abhijitsarkar.moviedatabase.service.MovieRipIndexService
  
 beans = {
-    //castAndCrewJsonRenderer(JsonRenderer, CastAndCrew) {
-    //    excludes = ['class']
-    //}
-    //castAndCrewJsonCollectionRenderer(JsonCollectionRenderer, CastAndCrew) {
-    //    excludes = ['class']
-    //}
+	serviceHelper(ServiceHelper)
+
+    movieRipIndexService(MovieRipIndexService) {
+    	genres = '#{serviceHelper.genres}'
+    	includes = '#{serviceHelper.includes}'
+    }
+
+    xmlns aop:'http://www.springframework.org/schema/aop'
+    aop{
+        config('proxy-target-class': true)
+    }
 }
