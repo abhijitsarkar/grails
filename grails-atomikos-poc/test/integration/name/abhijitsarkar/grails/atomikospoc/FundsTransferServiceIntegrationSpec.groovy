@@ -32,8 +32,13 @@ class FundsTransferServiceIntegrationSpec extends IntegrationSpec {
         then:
         thrown(RuntimeException)
 
-        MyAccount.findByAccountNumber(1L).balance == 90.0
-        YourAccount.findByAccountNumber(2L).balance == 110.0
+        MyAccount.withNewSession {
+            MyAccount.findByAccountNumber(1L).balance == 90.0
+        }
+
+        YourAccount.withNewSession {
+            YourAccount.findByAccountNumber(2L).balance == 110.0
+        }
     }
 
     void 'test operations across two datasources when credit is supposed to roll back'() {
@@ -41,7 +46,12 @@ class FundsTransferServiceIntegrationSpec extends IntegrationSpec {
         fundsTransferService.transferFunds(1L, 2L, 10.0, false, true)
 
         then:
-        MyAccount.findByAccountNumber(1L).balance == 90.0
-        YourAccount.findByAccountNumber(2L).balance == 110.0
+        MyAccount.withNewSession {
+            MyAccount.findByAccountNumber(1L).balance == 90.0
+        }
+
+        YourAccount.withNewSession {
+            YourAccount.findByAccountNumber(2L).balance == 110.0
+        }
     }
 }
