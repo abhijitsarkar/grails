@@ -4,14 +4,12 @@ import grails.test.spock.IntegrationSpec
 
 class FundsTransferServiceIntegrationSpec extends IntegrationSpec {
 	FundsTransferService fundsTransferService
-    Account myAccount
-    Account yourAccount
 
     def setup() {
-        myAccount = new MyAccount(accountNumber: 1L, balance: 100.0, 
+        new MyAccount(accountNumber: 1L, balance: 100.0, 
                 accountOwnerName: 'Abhijit Sarkar').save(failOnError: true)
 
-        yourAccount = new YourAccount(accountNumber: 2L, balance: 100.0, 
+        new YourAccount(accountNumber: 2L, balance: 100.0, 
                 accountOwnerName: 'John Doe').save(failOnError: true)
     }
 
@@ -19,36 +17,31 @@ class FundsTransferServiceIntegrationSpec extends IntegrationSpec {
     }
 
     void 'test operations across two datasources when all is good'() {
-    	when:
-    	fundsTransferService.transferFunds(myAccount.accountNumber, yourAccount.accountNumber, 
-                10.0)
+        when:       
+        fundsTransferService.transferFunds(1L, 2L, 10.0)
 
-    	then:
-    	myAccount.balance == 90.0
-    	yourAccount.balance == 110.0
+        then:
+        MyAccount.findByAccountNumber(1L).balance == 90.0
+        YourAccount.findByAccountNumber(2L).balance == 110.0
     }
 
     void 'test operations across two datasources when credit throws exception'() {
         when:
-        try {
-            fundsTransferService.transferFunds(myAccount.accountNumber, yourAccount.accountNumber, 
-                10.0, true, false)
-        } catch (RuntimeException e) {
-
-        }
+        fundsTransferService.transferFunds(1L, 2L, 10.0, true, false)
 
         then:
-        myAccount.balance == 100.0
-        yourAccount.balance == 100.0
+        thrown(RuntimeException)
+
+        MyAccount.findByAccountNumber(1L).balance == 90.0
+        YourAccount.findByAccountNumber(2L).balance == 110.0
     }
 
-    void 'test operations across two datasources when credit rolls back'() {
+    void 'test operations across two datasources when credit is supposed to roll back'() {
         when:
-        fundsTransferService.transferFunds(myAccount.accountNumber, yourAccount.accountNumber, 
-                10.0, false, true)
+        fundsTransferService.transferFunds(1L, 2L, 10.0, false, true)
 
         then:
-        myAccount.balance == 100.0
-        yourAccount.balance == 100.0
+        MyAccount.findByAccountNumber(1L).balance == 90.0
+        YourAccount.findByAccountNumber(2L).balance == 110.0
     }
 }

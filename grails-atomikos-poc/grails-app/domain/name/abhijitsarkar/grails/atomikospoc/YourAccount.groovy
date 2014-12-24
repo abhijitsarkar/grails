@@ -11,7 +11,9 @@ class YourAccount extends Account {
 	}
 
 	double creditThrowException(final double amount) {
-    	throw new IllegalArgumentException()
+		credit(amount)
+
+    	throw new RuntimeException()
 	}
 
 	double creditRollback(final double amount) {
@@ -19,6 +21,6 @@ class YourAccount extends Account {
 			status.setRollbackOnly()
 		}
 
-		0.0d
+		credit(amount)
 	}
 }

@@ -7,7 +7,7 @@ class FundsTransferService {
 	/* If not specified, uses default datasource and associated txm mgr. Can only use one. 
 	 * http://grails.org/doc/latest/guide/conf.html (see Services section)
 	*/
-	// static datasource = 'DEFAULT'
+	//static datasource = 'other'
 
 	MyAccountManagementService myAccountManagementService
 	YourAccountManagementService yourAccountManagementService
